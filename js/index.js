@@ -8,28 +8,50 @@ var engine = Engine.create();
 engine.world.gravity.y = 0;
 engine.world.gravity.x = 0;
 
-var render = Render.create({
+var render;
+
+createCanvas(2,"x");
+
+function createCanvas (num,axis){
+  
+  var widthScreen = screen.width;
+  var heightScreen = screen.height;
+
+  render = Render.create({
   element: document.body,
   engine: engine,
   options: {
-    width: 800,
-    height: 400,
+    width: widthScreen,
+    height: widthScreen,
     wireframes: false
-  }
-});
+  }});
 
-var topWall = Bodies.rectangle(400, 50, 720, 20, { isStatic: true });
-var leftWall = Bodies.rectangle(50, 210, 20, 300, { isStatic: true });
-var rightWall = Bodies.rectangle(750, 210, 20, 300, { isStatic: true });
-var bottomWall = Bodies.rectangle(400, 350, 720, 20, { isStatic: true });
+  // First wall
+  var topWall = Bodies.rectangle(widthScreen/2, 50, widthScreen*0.9, 20, { isStatic: true });
+  var leftWall = Bodies.rectangle(widthScreen/2 - (widthScreen*0.9)/2 + 10, 100, 20, 120, { isStatic: true });
+  var rightWall = Bodies.rectangle(widthScreen/2 + (widthScreen*0.9)/2 - 10, 100, 20, 120, { isStatic: true });
+  var bottomWall = Bodies.rectangle(widthScreen/2, 150, widthScreen*0.9, 20, { isStatic: true });
 
-var box = Bodies.rectangle(90, 320, 40, 40,{frictionAir: 0,friction: 0,frictionStatic: 0});
+  // Second wall
+  var topWall_2 = Bodies.rectangle(widthScreen/2, 200, widthScreen*0.9, 20, { isStatic: true });
+  var leftWall_2 = Bodies.rectangle(widthScreen/2 - (widthScreen*0.9)/2 + 10, 250, 20, 120, { isStatic: true });
+  var rightWall_2 = Bodies.rectangle(widthScreen/2 + (widthScreen*0.9)/2 - 10, 250, 20, 120, { isStatic: true });
+  var bottomWall_2 = Bodies.rectangle(widthScreen/2, 300, widthScreen*0.9, 20, { isStatic: true });
 
-World.add(engine.world, [topWall, leftWall, rightWall, bottomWall, box]);
+  // insert boxes
+  var box = Bodies.rectangle(widthScreen/2 - (widthScreen*0.9)/2 + 70, 120, 40, 40,{frictionAir: 0,friction: 0,frictionStatic: 0});
+  var box_2 = Bodies.rectangle(widthScreen/2 - (widthScreen*0.9)/2 + 70, 270, 40, 40,{frictionAir: 0,friction: 0,frictionStatic: 0});
 
-Engine.run(engine);
+  World.add(engine.world, [leftWall, rightWall, topWall, bottomWall, box]);
+  World.add(engine.world, [leftWall_2, rightWall_2, topWall_2, bottomWall_2, box_2]);
 
-Render.run(render);
+
+  Engine.run(engine);
+
+  Render.run(render);
+
+}
+
 
 var interval = 100;
 setInterval(runx,interval);
