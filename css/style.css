@@ -1,10 +1,31 @@
 body {
   text-align: center;
-  margin: 10px;
+  margin: 0 !important;
 }
 
-canvas {
-  margin: 20px auto;
+.canvas-cover{
+  width: 80vw;
+  height: 100vh;
+  float: left;
+}
+
+.canvas {
+  width: 100%;
+  height: 90%;
+  background: #eeeeee;
+}
+
+.control-panel {
+  width: 100%;
+  height: 10%;
+  background: white;
+}
+
+.setting-panel{
+  width: 20vw;
+  height: 100vh;
+  float: left;
+  background: #dddddd;
 }
 
 button {
