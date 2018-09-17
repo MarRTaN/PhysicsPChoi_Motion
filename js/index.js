@@ -9,6 +9,7 @@ engine.world.gravity.y = 0;
 engine.world.gravity.x = 0;
 
 var render;
+var boxes = [];
 
 createCanvas(2,"x");
 
@@ -22,28 +23,40 @@ function createCanvas (num,axis){
   engine: engine,
   options: {
     width: widthScreen,
-    height: widthScreen,
+    height: 150*num + 50,
     wireframes: false
   }});
 
-  // First wall
-  var topWall = Bodies.rectangle(widthScreen/2, 50, widthScreen*0.9, 20, { isStatic: true });
-  var leftWall = Bodies.rectangle(widthScreen/2 - (widthScreen*0.9)/2 + 10, 100, 20, 120, { isStatic: true });
-  var rightWall = Bodies.rectangle(widthScreen/2 + (widthScreen*0.9)/2 - 10, 100, 20, 120, { isStatic: true });
-  var bottomWall = Bodies.rectangle(widthScreen/2, 150, widthScreen*0.9, 20, { isStatic: true });
+  for (var i = 0, h = 0; i < num; i++, h += 150) {
+    // console.log(i,h);
+    var topWall = Bodies.rectangle(widthScreen/2, 50 + h, widthScreen*0.9, 20, { isStatic: true });
+    var leftWall = Bodies.rectangle(widthScreen/2 - (widthScreen*0.9)/2 + 10, 100 + h, 20, 120, { isStatic: true });
+    var rightWall = Bodies.rectangle(widthScreen/2 + (widthScreen*0.9)/2 - 10, 100 + h, 20, 120, { isStatic: true });
+    var bottomWall = Bodies.rectangle(widthScreen/2, 150 + h, widthScreen*0.9, 20, { isStatic: true });  
+  
+    var box = Bodies.rectangle(widthScreen/2 - (widthScreen*0.9)/2 + 70, 120 + h, 40, 40,{frictionAir: 0,friction: 0,frictionStatic: 0});
+    boxes.push(box);
+    World.add(engine.world, [leftWall, rightWall, topWall, bottomWall, box]);
+  }
 
-  // Second wall
-  var topWall_2 = Bodies.rectangle(widthScreen/2, 200, widthScreen*0.9, 20, { isStatic: true });
-  var leftWall_2 = Bodies.rectangle(widthScreen/2 - (widthScreen*0.9)/2 + 10, 250, 20, 120, { isStatic: true });
-  var rightWall_2 = Bodies.rectangle(widthScreen/2 + (widthScreen*0.9)/2 - 10, 250, 20, 120, { isStatic: true });
-  var bottomWall_2 = Bodies.rectangle(widthScreen/2, 300, widthScreen*0.9, 20, { isStatic: true });
+  // // First wall
+  // var topWall = Bodies.rectangle(widthScreen/2, 50, widthScreen*0.9, 20, { isStatic: true });
+  // var leftWall = Bodies.rectangle(widthScreen/2 - (widthScreen*0.9)/2 + 10, 100, 20, 120, { isStatic: true });
+  // var rightWall = Bodies.rectangle(widthScreen/2 + (widthScreen*0.9)/2 - 10, 100, 20, 120, { isStatic: true });
+  // var bottomWall = Bodies.rectangle(widthScreen/2, 150, widthScreen*0.9, 20, { isStatic: true });
+
+  // // Second wall
+  // var topWall_2 = Bodies.rectangle(widthScreen/2, 200, widthScreen*0.9, 20, { isStatic: true });
+  // var leftWall_2 = Bodies.rectangle(widthScreen/2 - (widthScreen*0.9)/2 + 10, 250, 20, 120, { isStatic: true });
+  // var rightWall_2 = Bodies.rectangle(widthScreen/2 + (widthScreen*0.9)/2 - 10, 250, 20, 120, { isStatic: true });
+  // var bottomWall_2 = Bodies.rectangle(widthScreen/2, 300, widthScreen*0.9, 20, { isStatic: true });
 
   // insert boxes
-  var box = Bodies.rectangle(widthScreen/2 - (widthScreen*0.9)/2 + 70, 120, 40, 40,{frictionAir: 0,friction: 0,frictionStatic: 0});
-  var box_2 = Bodies.rectangle(widthScreen/2 - (widthScreen*0.9)/2 + 70, 270, 40, 40,{frictionAir: 0,friction: 0,frictionStatic: 0});
+  // var box = Bodies.rectangle(widthScreen/2 - (widthScreen*0.9)/2 + 70, 120, 40, 40,{frictionAir: 0,friction: 0,frictionStatic: 0});
+  // var box_2 = Bodies.rectangle(widthScreen/2 - (widthScreen*0.9)/2 + 70, 270, 40, 40,{frictionAir: 0,friction: 0,frictionStatic: 0});
 
-  World.add(engine.world, [leftWall, rightWall, topWall, bottomWall, box]);
-  World.add(engine.world, [leftWall_2, rightWall_2, topWall_2, bottomWall_2, box_2]);
+  // World.add(engine.world, [leftWall, rightWall, topWall, bottomWall, box]);
+  // World.add(engine.world, [leftWall_2, rightWall_2, topWall_2, bottomWall_2, box_2]);
 
 
   Engine.run(engine);
@@ -55,7 +68,7 @@ function createCanvas (num,axis){
 
 var interval = 100;
 setInterval(runx,interval);
-setInterval(runy,interval);
+// setInterval(runy,interval);
 
 //--------------------------------------------------
 
@@ -80,17 +93,17 @@ for (i = 0; i < numberOfBox; i++){
 
 $('.playx').on('click', function () {
     isRunningx = !isRunningx;
-    runx();
+    runx("x");
 });
 
 $('.playy').on('click', function () {
-    isRunningy = !isRunningy;
+    isRunningx = !isRunningx;
     v = -v;
-    runy();
+    runx("y");
 });
 
 
-function runx(){
+function runx(axis){
   if(isRunningx){
     
     console.log("t = " + t);
@@ -110,8 +123,11 @@ function runx(){
     console.log(objs[0].accretion);
     console.log("-------------");
 
-    Body.setVelocity( box, {x: vScale, y: 0});
-
+    if (axis == "x") {
+      Body.setVelocity( boxes[0], {x: vScale, y: 0});
+    }else{
+      Body.setVelocity( boxes[0], {x: 0, y: vScale});
+    }
     deltaS = v*deltaT + 0.5*a*Math.pow(deltaT,2);
     v = v + a*deltaT;
     s = s + deltaS;
@@ -122,31 +138,31 @@ function runx(){
   }
 }
 
-function runy(){
-  if(isRunningy){
+// function runy(){
+//   if(isRunningy){
 
-    console.log("t = " + t);
-    console.log("s = " + s);
-    console.log("v = " + v);
-    console.log("a = " + a);  
+//     console.log("t = " + t);
+//     console.log("s = " + s);
+//     console.log("v = " + v);
+//     console.log("a = " + a);  
 
-    objs[0].time.push(t);
-    objs[0].distance.push(s);
-    objs[0].velocity.push(v);
-    objs[0].accretion.push(a);
+//     objs[0].time.push(t);
+//     objs[0].distance.push(s);
+//     objs[0].velocity.push(v);
+//     objs[0].accretion.push(a);
 
-    console.log(objs[0].time);
-    console.log(objs[0].distance);
-    console.log(objs[0].velocity);
-    console.log(objs[0].accretion);
-    console.log("-------------"); 
+//     console.log(objs[0].time);
+//     console.log(objs[0].distance);
+//     console.log(objs[0].velocity);
+//     console.log(objs[0].accretion);
+//     console.log("-------------"); 
      
-    Body.setVelocity( box, {x: 0, y: vScale});
+//     Body.setVelocity( box, {x: 0, y: vScale});
 
-    deltaS = v*deltaT + 0.5*a*Math.pow(deltaT,2);
-    v = v + a*deltaT;
-    s = s + deltaS;
-    t = t + deltaT;
-    vScale = v*scale;
-  }
-}
+//     deltaS = v*deltaT + 0.5*a*Math.pow(deltaT,2);
+//     v = v + a*deltaT;
+//     s = s + deltaS;
+//     t = t + deltaT;
+//     vScale = v*scale;
+//   }
+// }
