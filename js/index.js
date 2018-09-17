@@ -15,11 +15,12 @@ createCanvas(2,"x");
 
 function createCanvas (num,axis){
   
-  var widthScreen = screen.width;
-  var heightScreen = screen.height;
+  var canvas = document.getElementById('canvas');
+  var widthScreen = canvas.offsetWidth;
+  var heightScreen = canvas.offsetHeight;
 
   render = Render.create({
-  element: document.body,
+  element: document.getElementById('canvas'),
   engine: engine,
   options: {
     width: widthScreen,
