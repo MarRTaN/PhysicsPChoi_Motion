@@ -15,6 +15,10 @@ body {
   background: #eeeeee;
 }
 
+.canvas-hide {
+  display: none;
+}
+
 .control-panel {
   width: 100%;
   height: 10%;
