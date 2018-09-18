@@ -11,7 +11,7 @@ engine.world.gravity.x = 0;
 var render;
 var boxes = [];
 
-createCanvas(10,"x");
+createCanvas(1,"x");
 
 function createCanvas (num,axis){
   
@@ -24,18 +24,55 @@ function createCanvas (num,axis){
   engine: engine,
   options: {
     width: widthScreen,
-    height: 150*num + 50,
+    height: heightScreen,
     wireframes: false
   }});
 
   console.log(render)
 
-  for (var i = 0, h = 0; i < num; i++, h += 150) {
+  var thickBorder = widthScreen*0.02;
+  var widthCenter = widthScreen/2;
+  var heightCenter = heightScreen/2;
+  var widthHorizentalborder = widthScreen*0.9;
+  var widthVerticalborder = heightScreen*0.12;
+  var halfAllHeightBox = (widthVerticalborder + thickBorder)/2;
+  var spaceBetweenBox = (widthVerticalborder+thickBorder)*0.5;
+
+  console.log(num-1,(num-2)/2);
+
+  var h = 0;
+  if (num % 2 == 0){
+    h -= spaceBetweenBox/2 + halfAllHeightBox*(num-1) + spaceBetweenBox*((num-2)/2);
+  }else{
+    if (num == 1){
+      h -= halfAllHeightBox;
+    }else{
+      h -= halfAllHeightBox*(num-1) + spaceBetweenBox*Math.floor(num/2);
+    } 
+  }
+
+  for (var i = 0, h; i < num; i++, h += (widthVerticalborder + spaceBetweenBox)) {
     // console.log(i,h);
-    var topWall = Bodies.rectangle(widthScreen/2 - widthScreen*0.1, 50 + h, widthScreen*0.9, 20, { isStatic: true });
-    var leftWall = Bodies.rectangle(widthScreen/2 - (widthScreen*0.9)/2 + 10 - widthScreen*0.1, 100 + h, 20, 120, { isStatic: true });
-    var rightWall = Bodies.rectangle(widthScreen/2 + (widthScreen*0.9)/2 - 10 - widthScreen*0.1, 100 + h, 20, 120, { isStatic: true });
-    var bottomWall = Bodies.rectangle(widthScreen/2 - widthScreen*0.1, 150 + h, widthScreen*0.9, 20, { isStatic: true });  
+    var topWall = Bodies.rectangle(widthCenter,
+                                   heightCenter + widthVerticalborder/2 + h, 
+                                   widthScreen*0.9, 
+                                   thickBorder, 
+                                   { isStatic: true });
+    var bottomWall = Bodies.rectangle(widthCenter,
+                                   heightCenter - widthVerticalborder/2 + h, 
+                                   widthScreen*0.9, 
+                                   thickBorder, 
+                                   { isStatic: true });
+    var leftWall = Bodies.rectangle(widthCenter - widthHorizentalborder/2 + thickBorder/2, 
+                                   heightCenter + h, 
+                                   thickBorder, 
+                                   widthVerticalborder + thickBorder, 
+                                   { isStatic: true });
+    var rightWall = Bodies.rectangle(widthCenter + widthHorizentalborder/2 - thickBorder/2, 
+                                   heightCenter + h, 
+                                   thickBorder, 
+                                   widthVerticalborder + thickBorder, 
+                                   { isStatic: true });  
   
     var box = Bodies.rectangle(widthScreen/2 - (widthScreen*0.9)/2 + 70, 120 + h, 40, 40,{frictionAir: 0,friction: 0,frictionStatic: 0});
     boxes.push(box);
