@@ -11,7 +11,7 @@ engine.world.gravity.x = 0;
 var render;
 var boxes = [];
 
-createCanvas(1,"x");
+createCanvas(3,"x");
 
 function createCanvas (num,axis){
   
