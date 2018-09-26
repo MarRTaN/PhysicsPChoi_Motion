@@ -103,7 +103,7 @@ setInterval(run,interval);
 
 var isRunningx = false;
 var isRunningy = false;
-var scale = 0.2;
+var scale = 0.5;
 
 var t = [0,0,0,0,0];
 var s = [0,0,0,0,0];
@@ -122,7 +122,6 @@ var deltaS = 0;
 
 $('.playx').on('click', function () {
     isRunningx = !isRunningx;
-    Body.scale(boxes[0].boxDetail,1,1.2);
 });
 
 // $('.playy').on('click', function () {
@@ -141,6 +140,26 @@ function runx(num,axis){
   if(isRunningx){
     console.log(num);
     var i = 0;
+
+    // var canvas = document.getElementById('canvas');
+    // var widthScreen = canvas.offsetWidth;
+    // var heightScreen = canvas.offsetHeight;
+    // var thickBorder = widthScreen*0.02;
+    // var widthCenter = widthScreen/2;
+    // var heightCenter = heightScreen/2;
+    // var widthHorizentalborder = widthScreen*0.9;
+    // var widthVerticalborder = heightScreen*0.12;
+    // var halfAllHeightBox = (widthVerticalborder + thickBorder)/2;
+    // var spaceBetweenBox = halfAllHeightBox*0.5;
+    // var boxSize = halfAllHeightBox*2*0.4;
+
+    // var h = 0;
+    // if (num % 2 == 0){
+    //   h -= spaceBetweenBox/2 + halfAllHeightBox*(num-1) + spaceBetweenBox*((num-2)/2);
+    // }else{
+    //   h -= halfAllHeightBox*(num-1) + (spaceBetweenBox*(num-1)/2);
+    // }
+    
     while(i < num){
       console.log(i);
       console.log("t = " + t[i]);
@@ -160,8 +179,12 @@ function runx(num,axis){
       console.log(boxes[i].accretion);
       console.log("-------------");
 
-      console.log(boxes[i].boxDetail.position.x," < ",bunker);
-      if (boxes[i].boxDetail.position.x < bunker){
+      console.log(boxes[i].boxDetail.position.x," > ",bunker);
+      if (boxes[i].boxDetail.position.x > bunker){
+        console.log("bunker = ",bunker);
+        Body.setVelocity(boxes[i].boxDetail, {x: 0, y: 0});
+        console.log(boxes[i].boxDetail.position);
+      }else{
         if (axis == "x") {
           Body.setVelocity( boxes[i].boxDetail, {x: vScale[i], y: 0});
         }else{
@@ -173,10 +196,9 @@ function runx(num,axis){
         s[i] = s[i] + deltaS;
         t[i] = t[i] + deltaT;
         vScale[i] = v[i]*scale;
-      }else{
-        Body.setVelocity( boxes[i].boxDetail, {x: 0, y: 0});
       }
       i++;
+      // h += halfAllHeightBox*2 + spaceBetweenBox;
 
     }
     console.log("-------------");
