@@ -29,18 +29,120 @@ body {
   width: 20vw;
   height: 100vh;
   float: left;
-  background: #dddddd;
+  background: #2d2d2d;
 }
 
-button {
-  color: white;
-  background: orange;
-  border: none;
-  padding: 10px;
-  font-weight: 300;
-  font-size: 1.2em;
-  font-family: 'Lato';
-  margin: 10px;
-  cursor: pointer;
-  outline: none;
+.axis-box{
+  padding: 1.5vh 1vw 0.5vh 1vw;
+  background: white;
+  border-radius: 5px;
+  margin: 2vh 1vw 3vh 1vw;
+}
+
+.axis-box > .axis-radio{
+  display: inline-block;
+  margin-left: 1vw;
+}
+
+.axis-box > label{
+  display: inline-block;
+  margin-left: 1vw;
+}
+
+.box{
+  padding: 1vw;
+  border-radius: 10px;
+  float: top;
+  margin: 0vh 1vw 3vh 1vw;
+  box-shadow: rgba(0,0,0,0.8) 0px 4px 10px;
+}
+
+.box-blue{
+  background: #4FCEC4;
+}
+
+.box-red{
+  background: #FF6B6B;
+}
+
+.box-green{
+  background: #C7F464;
+}
+
+.box > input[type=number]{
+  width: 8vw;
+  margin-left: 2vw;
+  text-align: center;
+}
+
+.box > input[type=checkbox]{
+  margin-right: 1vw;
+}
+
+.generate-btn,
+.generate-btn:hover,
+.generate-btn:active,
+.generate-btn:focus{
+  border-width: 0;
+  box-shadow: rgba(0,0,0,0.8) 0px 2px 5px;
+  padding: 1vh 2vw;
+}
+
+.generate-btn,
+.generate-btn:focus{
+  /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#ff9f02+0,ff8000+99 */
+background: #ff9f02; /* Old browsers */
+background: -moz-linear-gradient(top, #ff9f02 0%, #ff8000 99%); /* FF3.6-15 */
+background: -webkit-linear-gradient(top, #ff9f02 0%,#ff8000 99%); /* Chrome10-25,Safari5.1-6 */
+background: linear-gradient(to bottom, #ff9f02 0%,#ff8000 99%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ff9f02', endColorstr='#ff8000',GradientType=0 ); /* IE6-9 */
+}
+
+.generate-btn:hover{
+/* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#ffb53f+0,ff9932+99 */
+background: #ffb53f; /* Old browsers */
+background: -moz-linear-gradient(top, #ffb53f 0%, #ff9932 99%); /* FF3.6-15 */
+background: -webkit-linear-gradient(top, #ffb53f 0%,#ff9932 99%); /* Chrome10-25,Safari5.1-6 */
+background: linear-gradient(to bottom, #ffb53f 0%,#ff9932 99%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffb53f', endColorstr='#ff9932',GradientType=0 ); /* IE6-9 */border-width: 0;
+}
+
+.generate-btn:active{
+/* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#ffb53f+0,ff9932+99 */
+background: #FF8000 !important; /* Old browsers */
+}
+
+.play-btn,
+.play-btn:hover,
+.play-btn:active,
+.play-btn:focus{
+  border-width: 0;
+  box-shadow: rgba(0,0,0,0.8) 0px 2px 5px;
+  padding: 1vh 2vw;
+  float: left;
+  transform: translate(0%, 50%);
+}
+
+.play-btn,
+.play-btn:focus{
+  /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#ff9f02+0,ff8000+99 */
+background: #ff9f02; /* Old browsers */
+background: -moz-linear-gradient(top, #ff9f02 0%, #ff8000 99%); /* FF3.6-15 */
+background: -webkit-linear-gradient(top, #ff9f02 0%,#ff8000 99%); /* Chrome10-25,Safari5.1-6 */
+background: linear-gradient(to bottom, #ff9f02 0%,#ff8000 99%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ff9f02', endColorstr='#ff8000',GradientType=0 ); /* IE6-9 */
+}
+
+.play-btn:hover{
+/* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#ffb53f+0,ff9932+99 */
+background: #ffb53f; /* Old browsers */
+background: -moz-linear-gradient(top, #ffb53f 0%, #ff9932 99%); /* FF3.6-15 */
+background: -webkit-linear-gradient(top, #ffb53f 0%,#ff9932 99%); /* Chrome10-25,Safari5.1-6 */
+background: linear-gradient(to bottom, #ffb53f 0%,#ff9932 99%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffb53f', endColorstr='#ff9932',GradientType=0 ); /* IE6-9 */border-width: 0;
+}
+
+.play-btn:active{
+/* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#ffb53f+0,ff9932+99 */
+background: #FF8000 !important; /* Old browsers */
 }
