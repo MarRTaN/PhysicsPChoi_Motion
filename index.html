@@ -11,56 +11,55 @@
 
 	<body>
 		<div class="canvas-cover">
-			<div class="canvas" id="canvas"></div>
-			<div class="canvas canvas-hide" id="canvas-graph" style="background: red">
-				TEST
-			</div>
 			<div class="control-panel">
-				<button type="button" class="btn btn-primary play-btn">Play</button>
+				<button type="button" class="btn btn-primary" id="play-btn" disabled>Play</button>
+				<table class="scale-table" id="scale-table">
+					<tr id="scale-row"></tr>
+				</table>
 			</div>
+			<div class="canvas" id="canvas"></div>
 		</div>
 		<div class="setting-panel">
-			<div class="contain">
+			<div style="margin-bottom: 30px;" class="contain">
 				<div class="col-md-12">
-					<div class="axis-box">
-						<input class="axis-radio" style="margin: 0" type="radio" name="axis" value="x"><label>X</label>
-		  				<input class="axis-radio" type="radio" name="axis" value="y"><label>Y</label>
-	  				</div>
+					<p style="color:white; padding: 30px 10px 10px 10px;">การเคลื่อนที่ในแนวแกน X</p>
+	  			</div>
+	  			<div class="col-md-12 box-detail">
+  					<div class="box box-add">
+  						<input type="checkbox" id="box-show" name="box-show" checked="true" /><label>show</label><br>
+  						<label>s</label><input type="number" id="box-s" name="box-s" step="1" /><br>
+  						<label>v</label><input type="number" id="box-v" name="box-v" step="1" /><br>
+  						<label>a</label><input type="number" id="box-a" name="box-a" step="1" /><br>
+  					</div>
 	  			</div>
 	  			<div class="col-md-12">
-	  				<div class="box-list">
-	  					<div class="box box-blue">
-	  						<input type="checkbox" id="box-1-show" name="box-1-show" /><label>show</label><br>
-	  						<label>s</label><input type="number" id="box-1-s" name="box-1-s" step="1" /><br>
-	  						<label>v</label><input type="number" id="box-1-v" name="box-1-v" step="1" /><br>
-	  						<label>a</label><input type="number" id="box-1-a" name="box-1-a" step="1" /><br>
-	  					</div>
-	  					<div class="box box-red">
-	  						<input type="checkbox" id="box-1-show" name="box-1-show" /><label>show</label><br>
-	  						<label>s</label><input type="number" id="box-1-s" name="box-1-s" step="1" /><br>
-	  						<label>v</label><input type="number" id="box-1-v" name="box-1-v" step="1" /><br>
-	  						<label>a</label><input type="number" id="box-1-a" name="box-1-a" step="1" /><br>
-	  					</div>
-	  					<div class="box box-green">
-	  						<input type="checkbox" id="box-1-show" name="box-1-show" /><label>show</label><br>
-	  						<label>s</label><input type="number" id="box-1-s" name="box-1-s" step="1" /><br>
-	  						<label>v</label><input type="number" id="box-1-v" name="box-1-v" step="1" /><br>
-	  						<label>a</label><input type="number" id="box-1-a" name="box-1-a" step="1" /><br>
-	  					</div>
-	  				</div>
-	  			</div>
-	  			<div class="col-md-12">
-					<button type="button" class="btn btn-primary generate-btn">Generate</button>
+					<button class="btn btn-danger hide" id="delete-btn" onclick="deleteBox()">Delete</button>
+					<button class="btn btn-warning" id="create-btn" onclick="createBox()" disabled>Create</button>
 				</div>
 			</div>
+			<div class="contain box-list">
+	  			<div class="box-button default" id="box-button-0"></div>
+	  			<div class="box-button default" id="box-button-1"></div>
+	  			<div class="box-button default" id="box-button-2"></div>
+	  			<div class="box-button default" id="box-button-3"></div>
+				<button type="button" class="btn btn-success generate-btn" id="generate-btn" onclick="generate()">Generate</button><br>
+				<button type="button" class="btn btn-danger reset-btn" onclick="deleteAll()">Reset</button>
+			</div>
 		</div>
-
+		<!-- <div class="fade-black">
+			<div class="axis-box">
+				<p>เลือกแกน</p>
+				<button onclick="selectAxis('x')">x</button>
+				<button onclick="selectAxis('y')">y</button>
+			</div>
+		</div> -->
 	</body>
 
   	<script src='https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.11.0/matter.min.js'></script>
 	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+	<script  src="js/action.js"></script>
 	<script  src="js/index.js"></script>
 
 </html>

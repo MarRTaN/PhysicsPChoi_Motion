@@ -134,8 +134,6 @@ function createCanvas (){
     //                               }
     //                             }
 
-    //FOUN : TO SET BOX'S STARTING POSITION
-
     var pos = getBoxPositionOnMap(i,floorLength);
     var box = Bodies.rectangle(pos + canvasMargin - boxSize,
                                heightCenter + h + halfAllHeightBox - thickBorder - boxSize/2,
@@ -179,11 +177,6 @@ function createCanvas (){
 }
 
 //reset = back to first state
-
-/////////////////
-// NOT USE NOW //
-/////////////////
-/*
 function resetCanvas(){
   World.clear(engine.world, true);
 
@@ -214,13 +207,8 @@ function resetCanvas(){
     boxes.push(obj);
     World.add(engine.world, [box]);
   }
-}*/
+}
 
-
-/////////////////
-// NOT USE NOW //
-/////////////////
-/*
 function clearCanvas(){
   Engine = null,
   Render = null,
@@ -237,7 +225,6 @@ function clearCanvas(){
   leftBunker = null;
   document.getElementById('canvas').innerHTML = "";
 }
-*/
 
 function rescale(){
 
@@ -294,14 +281,41 @@ function rescale(){
 var isRunningx = false;
 var isRunningy = false;
 
+var t = [0,0,0,0,0];
+var s = [0,0,0,0,0];
+var v = [100,100,20,5,5];
+var a = [5,5,50,20,20];
+var vScale = [];
+
+var tempt = [0,0,0,0,0];
+var temps = [0,0,0,0,0];
+var tempv = [100,100,20,5,5];
+var tempa = [5,5,50,20,20];
+
 var boxData = [];
+var tempBoxData = [];
+
+for (var i = 0; i < v.length; i++) {
+  vScale.push(v[i]*scale);
+}
+
+// console.log(v);
+// console.log(vScale);
 var deltaT = intervalTime/1000;
 var deltaS = 0;
 
 $('#play-btn').on('click', function () {
     isRunningx = !isRunningx;
     if(isRunningx){
+      var i = 0;
       console.log(boxData);
+      while(i < numberOfBox){
+        boxData[i].t = tempBoxData[i].t;
+        boxData[i].s = tempBoxData[i].s;
+        boxData[i].v = tempBoxData[i].v;
+        boxData[i].vScale = tempBoxData[i].v*scale;
+        i++;
+      }
       runnerInterval = setInterval(run,intervalTime);
     } else {
       $(this).html("Play");
@@ -408,6 +422,19 @@ function run(){
 }
 
 function stop(){
+  console.log("STOP");
+
+  for(i = 0; i < numberOfBox; i++){
+
+    tempBoxData[i].t = boxData[i].t;
+    tempBoxData[i].s = boxData[i].s;
+    tempBoxData[i].v = boxData[i].v;
+
+    boxData[i].t = 0;
+    boxData[i].v = 0;
+    boxData[i].s = 0;
+    boxData[i].vScale = 0;
+  }
 
   var i = 0;
 
@@ -432,8 +459,6 @@ function selectAxis(axis){
   baseAxis = axis;
   popout();
 }
-
-//FOUN:: MUST EDIT//
 
 var maxStartDistance = 0;
 

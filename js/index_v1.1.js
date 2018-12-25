@@ -20,7 +20,7 @@ var widthScreen, heightScreen;
 var staticObjNo;
 
 var startScale = 0.1;
-var scale = 0.1;
+var scale = 1;
 var scaleDown = 0.9999999;
 var maxDistance = -1000000;
 var minDistance = 1000000;
@@ -122,6 +122,9 @@ function createCanvas (){
                                       } 
                                     });
 
+
+    var pos = getBoxPositionOnMap(i,floorLength);
+
     // var box = Bodies.rectangle(widthCenter - widthHorizentalborder/2 + boxSize/2 + widthHorizentalborder*0.01,
     //                            heightCenter + h + halfAllHeightBox - thickBorder - boxSize/2,
     //                            boxSize, 
@@ -134,9 +137,8 @@ function createCanvas (){
     //                               }
     //                             }
 
-    //FOUN : TO SET BOX'S STARTING POSITION
-
-    var pos = getBoxPositionOnMap(i,floorLength);
+    console.log(pos + canvasMargin - boxSize/2 - widthHorizentalborder/2);
+  
     var box = Bodies.rectangle(pos + canvasMargin - boxSize,
                                heightCenter + h + halfAllHeightBox - thickBorder - boxSize/2,
                                boxSize, 
@@ -150,7 +152,7 @@ function createCanvas (){
                                 }
     );
   
-    obj = {id: i, "time":[], "distance":[], "velocity":[], "accretion":[], "boxDetail":box};
+    obj = {id: i, "time":[], "distance":[], "velocity":[], "accretion":[], "boxDetail":box, "position":[]};
 
     boxes.push(obj);
     World.add(engine.world, [leftWall, rightWall, topWall, bottomWall, box]);
@@ -178,130 +180,44 @@ function createCanvas (){
   Render.run(render);
 }
 
-//reset = back to first state
-
-/////////////////
-// NOT USE NOW //
-/////////////////
-/*
-function resetCanvas(){
-  World.clear(engine.world, true);
-
-  var h = 0;
-  if (numberOfBox % 2 == 0){
-    h -= spaceBetweenBox/2 + halfAllHeightBox*(numberOfBox-1) + spaceBetweenBox*((numberOfBox-2)/2);
-  }else{
-    h -= halfAllHeightBox*(numberOfBox-1) + (spaceBetweenBox*(numberOfBox-1)/2);
-  }
-
-  for (var i = 0, h; i < numberOfBox; i++, h += (halfAllHeightBox*2 + spaceBetweenBox)) {
-    // console.log(i,h);
-    var box = Bodies.rectangle(widthCenter - widthHorizentalborder/2 + boxSize/2 + widthHorizentalborder*0.01,
-                               heightCenter + h + halfAllHeightBox - thickBorder - boxSize/2,
-                               boxSize, 
-                               boxSize,
-                               {frictionAir: 0,friction: 0,frictionStatic: 0, 
-                                  render: {
-                                     fillStyle: boxData[i].fill,
-                                     strokeStyle: boxData[i].stroke,
-                                     lineWidth: 3
-                                  }
-                                }
-    );
-  
-    obj = {id: i, "time":[], "distance":[], "velocity":[], "accretion":[], "boxDetail":box};
-
-    boxes.push(obj);
-    World.add(engine.world, [box]);
-  }
-}*/
-
-
-/////////////////
-// NOT USE NOW //
-/////////////////
-/*
-function clearCanvas(){
-  Engine = null,
-  Render = null,
-  World = null,
-  Bodies = null,
-  Body = null;
-
-  engine = null;
-
-  render = null;
-  boxes = [];
-
-  rightBunker = null;
-  leftBunker = null;
-  document.getElementById('canvas').innerHTML = "";
-}
-*/
-
-function rescale(){
-
-  var lineScale = Math.floor(1/scale);
-
-  if(lineScale > 20){
-    lineScale = 20;
-  }
-
-  if(lineScale % 2 != 0){
-    lineScale++;
-  }
-
-  var i = engine.world.bodies.length-1;
-  while(i >= staticObjNo){
-    World.remove(engine.world,engine.world.bodies[i],false);
-    i = engine.world.bodies.length-1;
-  }
-
-  for(i = 0; i<lineScale+1; i++){
-    var height = thickBorder;
-    if(i%2 == 0){
-      height = height * 2;
-    }
-    var line = Bodies.rectangle(((widthScreen-(canvasMargin*2))*i/lineScale) + canvasMargin,
-                                   thickBorder*2, 
-                                   1, 
-                                   height, 
-                                   { isStatic: true,
-                                      render: {
-                                       strokeStyle: "#aaaaaa",
-                                       lineWidth: 1
-                                    } });
-    World.add(engine.world, [line]);
-  }
-
-  var row = document.getElementById('scale-row');
-  row.innerHTML = "";
-  for(i = 0; i<lineScale+1; i++){
-    var r = row.insertCell(i);
-    var value = (maxDistance - minDistance)/(lineScale);
-    if(i%2 == 0){
-      r.innerHTML = Math.floor(((i*value)+minDistance));
-    }
-  }
-
-  var scaleWidth = (widthScreen-(canvasMargin*2));
-  var tableWidth = scaleWidth + (scaleWidth/lineScale);
-  document.getElementById('scale-table').style.width = tableWidth+"px";
-  document.getElementById('scale-table').style.marginLeft = (canvasMargin)+"px";
-
-}
-
 var isRunningx = false;
 var isRunningy = false;
 
+var t = [0,0,0,0,0];
+var s = [0,0,0,0,0];
+var v = [100,100,20,5,5];
+var a = [5,5,50,20,20];
+var vScale = [];
+
+var tempt = [0,0,0,0,0];
+var temps = [0,0,0,0,0];
+var tempv = [100,100,20,5,5];
+var tempa = [5,5,50,20,20];
+
 var boxData = [];
+var tempBoxData = [];
+
+for (var i = 0; i < v.length; i++) {
+  vScale.push(v[i]*scale);
+}
+
+// console.log(v);
+// console.log(vScale);
 var deltaT = intervalTime/1000;
 var deltaS = 0;
 
 $('#play-btn').on('click', function () {
     isRunningx = !isRunningx;
     if(isRunningx){
+      var i = 0;
       console.log(boxData);
+      while(i < numberOfBox){
+        boxData[i].t = tempBoxData[i].t;
+        boxData[i].s = tempBoxData[i].s;
+        boxData[i].v = tempBoxData[i].v;
+        boxData[i].vScale = tempBoxData[i].v*scale;
+        i++;
+      }
       runnerInterval = setInterval(run,intervalTime);
     } else {
       $(this).html("Play");
@@ -310,12 +226,14 @@ $('#play-btn').on('click', function () {
     }
 });
 
+// $('.playy').on('click', function () {
+//     isRunningx = !isRunningx;
+//     v = -v;
+//     runx("y");
+// });
+
+
 function run(){
-
-    /////////////////////////////
-    //////// EDIT HERE //////////
-    /////////////////////////////
-
     var i = 0;
 
     var longestDistanceRight = -1;
@@ -332,6 +250,7 @@ function run(){
       boxes[i].distance.push(boxData[i].s);
       boxes[i].velocity.push(boxData[i].v);
       boxes[i].accretion.push(boxData[i].a);
+      boxes[i].position.push(boxes[i].boxDetail.position.x);
 
       if (boxes[i].boxDetail.position.x > rightBunker){
         console.log("Crash !! ... rescale = ",scale);
@@ -385,7 +304,7 @@ function run(){
 
     maxDistance = Math.ceil(maxDistance/100)*100;
     minDistance = Math.floor(minDistance/100)*100;
-    rescale();
+    // rescale();
 
     if(currentScale != scale){
       for(i = 0; i < numberOfBox; i++){
@@ -408,21 +327,63 @@ function run(){
 }
 
 function stop(){
+  console.log("STOP");
+
+  for(i = 0; i < numberOfBox; i++){
+
+    tempBoxData[i].t = boxData[i].t;
+    tempBoxData[i].s = boxData[i].s;
+    tempBoxData[i].v = boxData[i].v;
+
+    boxData[i].t = 0;
+    boxData[i].v = 0;
+    boxData[i].s = 0;
+    boxData[i].vScale = 0;
+  }
 
   var i = 0;
 
   while(i < numberOfBox){
 
     if (baseAxis == "x") {
-      Body.setVelocity( boxes[i].boxDetail, {x: 0, y: 0});
+      Body.setVelocity( boxes[i].boxDetail, {x: boxData[i].vScale, y: 0});
     }else{
-      Body.setVelocity( boxes[i].boxDetail, {x: 0, y: 0});
+      Body.setVelocity( boxes[i].boxDetail, {x: 0, y: boxData[i].vScale});
     }
 
     i++;
 
   }
 }
+
+// function runy(){
+//   if(isRunningy){
+
+//     console.log("t = " + t);
+//     console.log("s = " + s);
+//     console.log("v = " + v);
+//     console.log("a = " + a);  
+
+//     boxes[i].time.push(t);
+//     boxes[i].distance.push(s);
+//     boxes[i].velocity.push(v);
+//     boxes[i].accretion.push(a);
+
+//     console.log(boxes[i].time);
+//     console.log(boxes[i].distance);
+//     console.log(boxes[i].velocity);
+//     console.log(boxes[i].accretion);
+//     console.log("-------------"); 
+     
+//     Body.setVelocity( box, {x: 0, y: vScale});
+
+//     deltaS = v*deltaT + 0.5*a*Math.pow(deltaT,2);
+//     v = v + a*deltaT;
+//     s = s + deltaS;
+//     t = t + deltaT;
+//     vScale = v*scale;
+//   }
+// }
 
 function popout(){
   $(".fade-black").hide();
@@ -433,11 +394,54 @@ function selectAxis(axis){
   popout();
 }
 
-//FOUN:: MUST EDIT//
+function predictFurtherstDistance(time){
+  // maxDistance = 100;
+  // minDistance = -100;
+  // if(boxData.length > 1){
+  //   for(i = 0; i < boxData.length; i++){
+  //     //calculate distance
+  //     u = boxData[i].v;
+  //     a = boxData[i].a;
+  //     s0 = boxData[i].s;
+  //     s = (rightBunker - leftBunker)*scale;
+  //     t = time; //sec
+  //     if(s > maxDistance){
+  //       maxDistance = s;
+  //       maxDistanceIndex = i;
+  //     }
+  //     if(s < minDistance){
+  //       minDistance = s;
+  //       minDistanceIndex = i;
+  //     }
+  //   }
+  //   if(maxDistance >= 0 && minDistance >= 0){
+  //     minDistance = 0;
+  //   } else if(maxDistance < 0 && minDistance < 0){
+  //     maxDistance = 0;
+  //   }
+  // } else if(boxData.length == 1){
+  //   maxDistanceIndex = 0;
+  //   minDistanceIndex = 0;
+  //   u = boxData[0].v;
+  //   a = boxData[0].a;
+  //   s0 = boxData[i].s;
+  //   s = (rightBunker - leftBunker)*scale;
+  //   t = time; //sec
+  //   s = (u*t) + (a*t*t/2);
+  //   if(s >= 0){
+  //     minDistance = 0;
+  //     maxDistance = s;
+  //   }
+  //   if(s < 0){
+  //     minDistance = s;
+  //     maxDistance = 0;
+  //   }
+  // }
+}
 
 var maxStartDistance = 0;
 
-function findSminSmaxAtStartingPoint(range){
+function findTheFurtherestStartPosition(){
   for(i = 0; i < boxData.length; i++){
     if(Math.abs(boxData[i].s) > maxStartDistance){
       maxStartDistance = Math.abs(boxData[i].s);
