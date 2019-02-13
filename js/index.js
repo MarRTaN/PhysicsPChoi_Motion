@@ -22,10 +22,10 @@ var staticObjNo;
 var startScale = 0.1;
 var scale = 0.1;
 var scaleDown = 0.9999999;
-var maxDistance = -1000000;
-var minDistance = 1000000;
-var maxDistanceIndex = -1;
-var minDistanceIndex = 1;
+var rightWindow = -1000000;
+var leftWindow = 1000000;
+var maxWindowIndex = -1;
+var minWindowIndex = 1;
 
 var hitLeftBunker = false;
 var hitRightBunker = false;
@@ -135,9 +135,12 @@ function createCanvas (){
     //                             }
 
     //FOUN : TO SET BOX'S STARTING POSITION
+    // initial_S and range to gen somthing
 
-    var pos = getBoxPositionOnMap(i,floorLength);
-    var box = Bodies.rectangle(pos + canvasMargin - boxSize,
+    var startingPosition = getBoxPositionOnMap(i,floorLength);
+    // + initial_S  behind boxSize
+    // change initial_S to boxData[].s
+    var box = Bodies.rectangle(startingPosition + canvasMargin - boxSize + initial_S[i] + savg,
                                heightCenter + h + halfAllHeightBox - thickBorder - boxSize/2,
                                boxSize, 
                                boxSize,
@@ -239,7 +242,7 @@ function clearCanvas(){
 }
 */
 
-function rescale(){
+function drawScale(){
 
   var lineScale = Math.floor(1/scale);
 
@@ -278,9 +281,9 @@ function rescale(){
   row.innerHTML = "";
   for(i = 0; i<lineScale+1; i++){
     var r = row.insertCell(i);
-    var value = (maxDistance - minDistance)/(lineScale);
+    var value = (rightWindow - leftWindow)/(lineScale);
     if(i%2 == 0){
-      r.innerHTML = Math.floor(((i*value)+minDistance));
+      r.innerHTML = Math.floor(((i*value)+leftWindow));
     }
   }
 
@@ -328,37 +331,39 @@ function run(){
     
     while(i < numberOfBox){
 
+      // For Saving data to Array
       boxes[i].time.push(boxData[i].t);
       boxes[i].distance.push(boxData[i].s);
       boxes[i].velocity.push(boxData[i].v);
       boxes[i].accretion.push(boxData[i].a);
 
+      //Check hit bunker right
       if (boxes[i].boxDetail.position.x > rightBunker){
         console.log("Crash !! ... rescale = ",scale);
         scale = scale * scaleDown;
 
         //hit right bunker
-        if(Math.abs(boxData[i].s) > maxDistance){
-          maxDistance = Math.abs(boxData[i].s);
+        if(Math.abs(boxData[i].s) > rightWindow){
+          rightWindow = Math.abs(boxData[i].s);
         }
 
         //related velocity
-
         if(baseAxis == "x" && boxData[i].s > longestDistanceRight){
           longestDistanceRight = boxData[i].s;
           theFirstPlaceIdRight = i;
         }
 
-      } else if(boxes[i].boxDetail.position.x < leftBunker){
+      } 
+      //Check hit bunker left
+      else if(boxes[i].boxDetail.position.x < leftBunker){
 
 
         //hit left bunker
-        if(Math.abs(boxData[i].s) < minDistance){
-          minDistance = Math.abs(boxData[i].s);
+        if(Math.abs(boxData[i].s) < leftWindow){
+          leftWindow = Math.abs(boxData[i].s);
         }
 
         //related velocity
-
         if(baseAxis == "x" && boxData[i].s > longestDistanceLeft){
           longestDistanceLeft = boxData[i].s;
           theFirstPlaceIdLeft = i;
@@ -383,16 +388,15 @@ function run(){
 
     }
 
-    maxDistance = Math.ceil(maxDistance/100)*100;
-    minDistance = Math.floor(minDistance/100)*100;
-    rescale();
-
+    //Marrtan .. Foun dont touch !!
     if(currentScale != scale){
       for(i = 0; i < numberOfBox; i++){
         Body.scale( boxes[i].boxDetail, scale/0.1, scale/0.1);
       }
     }
 
+    //Return 1: Kick every boxes with related velocity of its box. foun
+    //For find related velocity
     if(longestDistanceRight != -1){
       var theFirstPlaceV = boxData[theFirstPlaceIdRight].vScale;
       var i = 0;
@@ -405,6 +409,12 @@ function run(){
         i++;
       }
     }
+
+
+    //Return 2: SLeftWall / SRightWall to drawScale()
+    rightWindow = Math.ceil(rightWindow/100)*100;
+    leftWindow = Math.floor(leftWindow/100)*100;
+    drawScale();
 }
 
 function stop(){
@@ -435,22 +445,42 @@ function selectAxis(axis){
 
 //FOUN:: MUST EDIT//
 
-var maxStartDistance = 0;
+var range = 100;
+var initial_S = [120,-120]
+var temprange
+var savg
 
-function findSminSmaxAtStartingPoint(range){
-  for(i = 0; i < boxData.length; i++){
-    if(Math.abs(boxData[i].s) > maxStartDistance){
-      maxStartDistance = Math.abs(boxData[i].s);
-    }
+
+//NOTE
+//change name max/minDisatance to rightWindow,leftWindow 
+//rightWindow = rightWindow
+//leftWindow = leftWindow
+
+
+function findSminSmaxAtStartingPoint(){
+  //เอาไว้เช็คว่า มันเกิน Range รึเปล่า
+  //ถ้าเกิน ให้แก้ค่า l/r Window
+  var smax = Math.max.apply(null, initial_S);
+  console.log(smax)
+  var smin = Math.min.apply(null, initial_S);
+  console.log(smin)
+  savg = (smax + smin) / 2;
+  console.log(savg)
+  if (smax - smin <= range){
+    rightWindow = savg + (range / 2);
+    leftWindow = savg - (range / 2);
+  }else{
+    temprange = smax - smin;
+    rightWindow = smax;
+    leftWindow = smin;
   }
-  if(maxStartDistance < 75){
-    maxStartDistance = 75;
-  }
+
+  console.log(leftWindow,rightWindow)
+
 }
 
+
 function getBoxPositionOnMap(index,floorLength){
-  maxDistance = maxStartDistance/0.75; // range [-max, max]
-  minDistance = -maxStartDistance/0.75;
-  var posOnMap = ((boxData[index].s-minDistance)/(maxDistance-minDistance))*floorLength;
+  var posOnMap = ((boxData[index].s-leftWindow)/(rightWindow-leftWindow))*floorLength;
   return posOnMap;
 }

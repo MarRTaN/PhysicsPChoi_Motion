@@ -156,7 +156,9 @@ function clearTextField(){
 
 function generate(){
 	genBoxData();
+	console.log("to findSminSmaxAtStartingPoint");
 	findSminSmaxAtStartingPoint();
+	console.log("to createCanvas");
 	createCanvas();
 	document.getElementById("play-btn").disabled = false;
 }
